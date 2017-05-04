@@ -11,8 +11,15 @@ public class TicTacTo {
 	}
 
 	private static void startUp() {
-		initialize();
-		play();
+		String playAgain = "y";
+		while (playAgain.equals("y")) {
+			initialize();
+			play();
+			Scanner in = new Scanner(System.in);
+			System.out.println("Play Again? [Y/N]:");
+			playAgain = in.nextLine().toLowerCase();
+			in.close();
+		}
 
 	}
 
@@ -44,29 +51,44 @@ public class TicTacTo {
 			if (i == 4) {
 				getMove(in);
 				drawBoard();
-				checkForWin();
+				if (checkForWin() == 0) {
+					System.out.println("It's a tie");
+					return;
+				} else if (checkForWin() == 1) {
+					System.out.println("X has won");// x win
+					return;
+				} else if (checkForWin() == 2) {
+					System.out.println("O has won");// o win
+					return;
+				}
 				return;
 			} else {
 				getMove(in);
-				compMove();
-				drawBoard();
-				if (checkForWin() == 0) {
-					contiue; 
-				} else if (checkForWin() == 1) {
-					// x win
-				} else if (checkForWin() == 2) {
-					// o win
-				}
 			}
-
+			if (checkForWin() == 1) {
+				System.out.println("X has won");// x win
+				return;
+			} else if (checkForWin() == 2) {
+				System.out.println("O has won");// o win
+				return;
+			}
+			compMove();
+			drawBoard();
+			if (checkForWin() == 0) {
+				continue;
+			} else if (checkForWin() == 1) {
+				System.out.println("X has won");// x win
+				return;
+			} else if (checkForWin() == 2) {
+				System.out.println("O has won");// o win
+				return;
+			}
 		}
 		in.close();
 	}
 
 	private static int checkForWin() { // sets up and checks for win conditions
 										// using a 2-d array
-		int oCount;
-		int xCount;
 		String[][] tmp = new String[3][3];
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++) {
@@ -74,12 +96,12 @@ public class TicTacTo {
 			}
 		}
 
-		 if (checkRows(tmp) == 1 || checkCol(tmp) == 1 || checkDiag(tmp) == 1) {
-		 return 1;
-		 } else if (checkRows(tmp) == 2 || checkCol(tmp) == 2 || checkDiag(tmp) == 2) {
-			 return 2;
-		 }
-		 return 0;
+		if (checkRows(tmp) == 1 || checkCol(tmp) == 1 || checkDiag(tmp) == 1) {
+			return 1;
+		} else if (checkRows(tmp) == 2 || checkCol(tmp) == 2 || checkDiag(tmp) == 2) {
+			return 2;
+		}
+		return 0;
 
 	}
 
@@ -130,38 +152,38 @@ public class TicTacTo {
 	}
 
 	private static int checkDiag(String[][] tmp) {
-		int xCount, yCount;
-		for (int i = 0; i < 3; i++) {
-			xCount = 0;
-			yCount = 0;
-			if (tmp[i][i].equals("O")) {
-					yCount++;
-				} else if (tmp[i][i].equals("X")) {
-					xCount++;
-				}		
-			if (xCount == 3) {
-				return 1; // need to change checkWin etc to return 0,1,2 to
-							// determin if no win, x win or y win.
-			} else if (yCount == 3) {
-				return 2;
-			}
-		}
-		for (int i = 0; i < 3; i++) {
-			xCount = 0;
-			yCount = 0;
-			if (tmp[i][2 - i].equals("O")) {
-					yCount++;
-				} else if (tmp[i][i].equals("X")) {
-					xCount++;
-				}		
-			if (xCount == 3) {
-				return 1; // need to change checkWin etc to return 0,1,2 to
-							// determin if no win, x win or y win.
-			} else if (yCount == 3) {
-				return 2;
-			}
-		}
+		int xCount = 0, yCount = 0;
 		
+		for (int i = 0; i < 3; i++) {
+			if (tmp[i][i].equals("O")) {
+				yCount++;
+			} else if (tmp[i][i].equals("X")) {
+				xCount++;
+			}
+			if (xCount == 3) {
+				return 1; // need to change checkWin etc to return 0,1,2 to
+							// determin if no win, x win or y win.
+			} else if (yCount == 3) {
+				return 2;
+			}
+		}
+		xCount = 0;
+		yCount = 0;
+		
+		for (int i = 0; i < 3; i++) {
+			if (tmp[i][2 - i].equals("O")) {
+				yCount++;
+			} else if (tmp[i][2- i].equals("X")) {
+				xCount++;
+			}
+			if (xCount == 3) {
+				return 1; // need to change checkWin etc to return 0,1,2 to
+							// determin if no win, x win or y win.
+			} else if (yCount == 3) {
+				return 2;
+			}
+		}
+
 		return 0;
 	}
 
@@ -173,8 +195,7 @@ public class TicTacTo {
 			System.out.print("Please input position for move:");
 			String move = in.next();
 			int moveInt = Integer.parseInt(move);
-
-			if (1 > moveInt && moveInt > 9 || position[moveInt - 1].equals("O")) {
+			if (1 > moveInt && moveInt > 9 || position[moveInt - 1].equals("O") || position[moveInt - 1].equals("X")) {
 				throw new NumberFormatException();
 			}
 			position[moveInt - 1] = "X";
@@ -192,7 +213,7 @@ public class TicTacTo {
 		while (position[move].equals("X") || position[move].equals("O")) {
 			move = random.nextInt(8);
 		}
-		position[move] = "0";
+		position[move] = "O";
 		return;
 	}
 }
