@@ -50,8 +50,12 @@ public class TicTacTo {
 				getMove(in);
 				compMove();
 				drawBoard();
-				if (checkForWin()) {
-					break;
+				if (checkForWin() == 0) {
+					contiue; 
+				} else if (checkForWin() == 1) {
+					// x win
+				} else if (checkForWin() == 2) {
+					// o win
 				}
 			}
 
@@ -59,7 +63,8 @@ public class TicTacTo {
 		in.close();
 	}
 
-	private static boolean checkForWin() { //sets up and checks for win conditions using a 2-d array
+	private static int checkForWin() { // sets up and checks for win conditions
+										// using a 2-d array
 		int oCount;
 		int xCount;
 		String[][] tmp = new String[3][3];
@@ -69,41 +74,95 @@ public class TicTacTo {
 			}
 		}
 
-		if (checkRows(tmp) || checkCol(tmp) || checkDiag(tmp)) {
-			return true;
-		} else {
-			return false;
-		}
+		 if (checkRows(tmp) == 1 || checkCol(tmp) == 1 || checkDiag(tmp) == 1) {
+		 return 1;
+		 } else if (checkRows(tmp) == 2 || checkCol(tmp) == 2 || checkDiag(tmp) == 2) {
+			 return 2;
+		 }
+		 return 0;
 
 	}
 
-	private static boolean checkRows(String[][] tmp) {
+	private static int checkRows(String[][] tmp) {
 		int xCount, yCount;
-		for(int i = 0; i < 3; i++) {
-			xCount = 0; 
+		for (int i = 0; i < 3; i++) {
+			xCount = 0;
 			yCount = 0;
-			for(String s : tmp[i]){
-				if(s.equals("O")){
+			for (String s : tmp[i]) {
+				if (s.equals("O")) {
 					yCount++;
-				} else if(s.equals("X")){
+				} else if (s.equals("X")) {
 					xCount++;
-				}				
+				}
 			}
-			if(yCount) //need to change checkWin etc to return 0,1,2 to determin if no win, x win or y win. 
+			if (xCount == 3) {
+				return 1; // need to change checkWin etc to return 0,1,2 to
+							// determin if no win, x win or y win.
+			} else if (yCount == 3) {
+				return 2;
+			}
 		}
-
-	return false;
+		return 0;
 
 	}
 
-	private static boolean checkCol(String[][] tmp) {
-		// TODO Auto-generated method stub
-		return false;
+	private static int checkCol(String[][] tmp) {
+		int xCount, yCount;
+		for (int i = 0; i < 3; i++) {
+			xCount = 0;
+			yCount = 0;
+			for (int j = 0; j < 3; j++) {
+				if (tmp[j][i].equals("O")) {
+					yCount++;
+				} else if (tmp[j][i].equals("X")) {
+					xCount++;
+				}
+			}
+			if (xCount == 3) {
+				return 1; // need to change checkWin etc to return 0,1,2 to
+							// determin if no win, x win or y win.
+			} else if (yCount == 3) {
+				return 2;
+			}
+
+		}
+		return 0;
 	}
 
-	private static boolean checkDiag(String[][] tmp) {
-		// TODO Auto-generated method stub
-		return false;
+	private static int checkDiag(String[][] tmp) {
+		int xCount, yCount;
+		for (int i = 0; i < 3; i++) {
+			xCount = 0;
+			yCount = 0;
+			if (tmp[i][i].equals("O")) {
+					yCount++;
+				} else if (tmp[i][i].equals("X")) {
+					xCount++;
+				}		
+			if (xCount == 3) {
+				return 1; // need to change checkWin etc to return 0,1,2 to
+							// determin if no win, x win or y win.
+			} else if (yCount == 3) {
+				return 2;
+			}
+		}
+		for (int i = 0; i < 3; i++) {
+			xCount = 0;
+			yCount = 0;
+			if (tmp[i][2 - i].equals("O")) {
+					yCount++;
+				} else if (tmp[i][i].equals("X")) {
+					xCount++;
+				}		
+			if (xCount == 3) {
+				return 1; // need to change checkWin etc to return 0,1,2 to
+							// determin if no win, x win or y win.
+			} else if (yCount == 3) {
+				return 2;
+			}
+		}
+		
+		return 0;
 	}
 
 	private static void getMove(Scanner in) { // gets the move, and inputs an
