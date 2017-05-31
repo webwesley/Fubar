@@ -13,6 +13,10 @@ import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JButton;
+import javax.swing.JTable;
+import javax.swing.JScrollPane;
+import org.eclipse.wb.swing.FocusTraversalOnArray;
+import java.awt.Component;
 
 public class RrefGui {
 
@@ -20,8 +24,11 @@ public class RrefGui {
 	private JTextField rows;
 	private JButton btnUpdate;
 	private JPanel panel;
-	private JTextField[] arrayCont;
+	private String[] variables; 
 	private int rowNum;
+	private JTable table;
+	private JTextField variableTxt;
+	private Object[][] data;
 
 	/**
 	 * Launch the application.
@@ -54,61 +61,80 @@ public class RrefGui {
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
-		
+
 		JLabel lblRows = new JLabel("Rows:");
 		lblRows.setBounds(12, 12, 70, 15);
 		frame.getContentPane().add(lblRows);
-		
+
 		rows = new JTextField();
 		rows.setBounds(63, 10, 82, 20);
 		frame.getContentPane().add(rows);
 		rows.setColumns(10);
-		
+
 		JButton btnUpdate = new JButton("Update");
 		btnUpdate.setBounds(12, 37, 117, 25);
 		frame.getContentPane().add(btnUpdate);
-		btnUpdate.addActionListener(new ActionListener(){
+		
+		JLabel lblvariables = new JLabel("Variables:");
+		lblvariables.setBounds(160, 12, 82, 15);
+		frame.getContentPane().add(lblvariables);
+		
+		variableTxt = new JTextField();
+		variableTxt.setBounds(246, 10, 114, 19);
+		frame.getContentPane().add(variableTxt);
+		variableTxt.setColumns(10);
+		frame.getContentPane().setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{lblRows, rows, variableTxt, btnUpdate, lblvariables}));
+		
+		
+		
+		
+		
+		
+		
+		
+		btnUpdate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
 					rowNum = Integer.parseInt(rows.getText());
-					arrayContSetUp();
-					System.out.println(Arrays.toString(arrayCont));
-//					createMatrix();//need to figure this out
-					JOptionPane.showMessageDialog(null, rowNum);
+//					JOptionPane.showMessageDialog(null, rowNum);
+					variablesSetUp();
+					if(variables.length != rowNum + 1){
+						JOptionPane.showMessageDialog(null, "Sorry, the dimensions of your matrices are not correct");
+						return;
+					}
+					makeTable();
 				} catch (NumberFormatException e) {
 					JOptionPane.showMessageDialog(null, "That is not a number. Please try again");
 				} catch (HeadlessException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+
+			}
+
+			private void makeTable() {
+				table = new JTable(data, variables);
+				table.setFillsViewportHeight(true);
+				JScrollPane scrollPane = new JScrollPane(table);
+				scrollPane.setBounds(12, 65, 426, 120);
+				frame.getContentPane().add(scrollPane);
+				
+				
 				
 			}
 
-			private void arrayContSetUp() {
-				arrayCont = new JTextField[rowNum * (rowNum + 1)];
-				for(int i = 0; i < rowNum * (rowNum + 1); i++) {
-					JTextField tmp = new JTextField();
-					arrayCont[i] = tmp;
+			private void variablesSetUp() {
+				variables = (variableTxt.getText()+ ",Constants").split(",");
+				
+				data = new Object[rowNum][rowNum + 1];
+				for(int i = 0; i< rowNum; i++){
+					for(int j = 0; j < rowNum + 1; j++){
+						data[i][j] = 0;
+					}
 				}
+				
 			}
 		});
-	
-	}
-	
-
-	
-	private void createMatrix(){
-		for(int i = 0; i < rowNum; i++){
-			for(int j = 0; j < rowNum + 1; j++){
-				arrayCont[(i * (rowNum + 1)) + j].setBounds(12 + 20 * j , 12 + i * 20, 15, 15);
-				panel.add(arrayCont[(i * (rowNum + 1)) + j]);
-			}
-			
-		}
-		
-		
-			//setBounds(12 + 20 * j , 12 + i * 20, 15, 15);
-
 	}
 	
 }
