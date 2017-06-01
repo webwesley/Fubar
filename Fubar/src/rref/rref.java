@@ -11,7 +11,7 @@ public class rref {
 									// dimensions for rref
 		int row = matrix.length;
 		int col = matrix[0].length;
-		if ((col - 1) != row) {
+		if((col - 1) != row) {
 			return false;
 		}
 		return true;
