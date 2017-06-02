@@ -28,14 +28,14 @@ public class rref {
 		return matrix;
 	}
 
-	private void makeOne(int row, int col) {
+	private void makeOne(int row, int col) {        //makes the specified value a one by dividing the entire row by that value 
 		double tmp = matrix[row][col];
 		for (int i = 0; i <  matrix[row].length; i++) {
 			matrix[row][i] = matrix[row][i] / tmp;
 		}
 	}
 
-	private void makeZero(int row, int col) {
+	private void makeZero(int row, int col) { //makes each other value in the column a zero by subtracting 1*coefficent to make the value 0. This is applied to all other numbers in the row
 		int length1 = matrix.length;
 		for (int i = 0; i < length1; i++) {
 			if(i == row){
